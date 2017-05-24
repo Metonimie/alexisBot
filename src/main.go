@@ -8,6 +8,8 @@ import (
     "github.com/paked/messenger"
     "fmt"
     "time"
+    "strings"
+    "os"
 )
 
 const host = "denisnutiu.me"
@@ -15,21 +17,34 @@ const ip = "" // empty means it binds to everything.
 const port = "443" // Facebook wants us to be "secure". FaCeeBoK WanTs Us To bE sEcUrE.
 
 const verify = false // If the app should verify itself.
-const verifyToken = "" // The facebook verify token.
-const pageToken = "" // The facebook page token.
+var verifyToken string = os.Getenv("FB_VERIFY_TOKEN") // The facebook verify token.
+var pageToken string = os.Getenv("FB_PAGE_TOKEN") // The facebook page token.
 
 var client *messenger.Messenger
 
 // Handler to be triggered when a message is received
 func MessageHandler(m messenger.Message, r *messenger.Response) {
-    fmt.Printf("%v (Sent, %v)\n", m.Text, m.Time.Format(time.UnixDate))
+    log.Printf("%v (Sent, %v)\n", m.Text, m.Time.Format(time.UnixDate))
 
-    p, err := client.ProfileByID(m.Sender.ID)
+    // p is delcared here.
+    _, err := client.ProfileByID(m.Sender.ID)
     if err != nil {
-        fmt.Println("Something went wrong!", err)
+        log.Println("Something went wrong!", err)
     }
 
-    r.Text(fmt.Sprintf("Hello, %v!", p.FirstName))
+    // Spongebob's algorithm
+    var newS string
+    counter := 0
+    for _, c := range m.Text {
+         if counter % 2 != 0 {
+              newS += strings.ToLower(string(c))
+         } else {
+              newS += strings.ToUpper(string(c))
+         }
+         counter++
+    }
+
+    r.Text(newS)
 }
 
 // Handler to be triggered when a message is delivered
@@ -59,7 +74,6 @@ func main() {
         WebhookURL: "/webhook",
     })
 
-    // Server settings
     server := &http.Server{
         Addr: ip + ":" + port,
         TLSConfig: &tls.Config{
@@ -67,6 +81,8 @@ func main() {
         },
         Handler: client.Handler(),
     }
+
+
 
     // Setup a handler to be triggered when a message is received
     client.HandleMessage(MessageHandler)
