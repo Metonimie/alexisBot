@@ -56,13 +56,16 @@ func main() {
         Verify:      verify,
         VerifyToken: verifyToken,
         Token:       pageToken,
+        WebhookURL: "/webhook",
     })
 
+    // Server settings
     server := &http.Server{
         Addr: ip + ":" + port,
         TLSConfig: &tls.Config{
             GetCertificate: certManager.GetCertificate,
         },
+        Handler: client.Handler(),
     }
 
     // Setup a handler to be triggered when a message is received
