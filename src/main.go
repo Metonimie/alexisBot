@@ -57,7 +57,6 @@ func ReadHandler(m messenger.Read, r *messenger.Response) {
     fmt.Println("Read at:", m.Watermark().Format(time.UnixDate))
 }
 
-
 func main() {
     // Let's Encrypt Certificate Manager.
     certManager := autocert.Manager{
@@ -74,6 +73,7 @@ func main() {
         WebhookURL: "/webhook",
     })
 
+    // Server Settings
     server := &http.Server{
         Addr: ip + ":" + port,
         TLSConfig: &tls.Config{
@@ -81,8 +81,6 @@ func main() {
         },
         Handler: client.Handler(),
     }
-
-
 
     // Setup a handler to be triggered when a message is received
     client.HandleMessage(MessageHandler)
