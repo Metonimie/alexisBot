@@ -24,8 +24,8 @@ type queryValues map[string]string
 
 // Create a new Wit Client.
 //
-//      client := bot.Client("WIT TOKEN")
-func NewClient(witToken string) *Client {
+//    client := bot.Client("WIT TOKEN")
+func NewWitClient(witToken string) *Client {
     client := new(Client)
     client.apiKey = witToken
     client.apiUrl = apiUrl
@@ -34,6 +34,13 @@ func NewClient(witToken string) *Client {
     return client
 }
 
+// Constructs an url ready to be used for the request.
+//
+//    query := make(queryValues)
+//    query["session_id"] = "abc123"
+//    theUrl := client.makeUrl("/converse", query)
+//
+//    theUrl will have the following value: https://api.wit.ai/converse?v=123&session_id=abc123
 func (client *Client) makeUrl(path string, args queryValues) string {
     var buffer bytes.Buffer
     buffer.WriteString(client.apiUrl)
@@ -41,7 +48,7 @@ func (client *Client) makeUrl(path string, args queryValues) string {
     buffer.WriteString("?v=")
     buffer.WriteString(client.apiVersion)
 
-    // For each key in queryValues make it to url.
+    // For each key in queryValues add it to the url.
     for k, v := range args {
         buffer.WriteString("&" + k + "=")
         buffer.WriteString(v)
@@ -50,6 +57,8 @@ func (client *Client) makeUrl(path string, args queryValues) string {
     return buffer.String()
 }
 
+// Call the wit.ai /converse endpoint
+// See more: https://wit.ai/docs/http/20170307#post--converse-link
 func (client * Client) Converse(sessionId string, q string, reset bool) (string, error) {
     // Make a query map
     query := make(queryValues)
@@ -74,7 +83,7 @@ func (client * Client) Converse(sessionId string, q string, reset bool) (string,
     if err != nil {
         return "", err
     }
-    // Setup the right headers.
+    // Set the headers.
     request.Header.Add("Content-Type", "application/json")
     request.Header.Add("Authorization", "Bearer " + client.apiKey)
 
