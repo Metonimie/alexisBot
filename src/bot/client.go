@@ -76,6 +76,7 @@ func (client *Client) executeRequest(url string) ([]byte, error)  {
     // Execute the request
     httpClient := http.Client{}
     resp, err := httpClient.Do(request)
+    defer resp.Body.Close() // Close when this function returns.
     if err != nil {
         return nil, err
     }
@@ -154,4 +155,3 @@ func (client * Client) Message(q string, msg_id *string, thread_id *string, n *s
 
     return response, nil
 }
-
