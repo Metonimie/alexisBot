@@ -29,7 +29,7 @@ type MessageResponse struct {
     Entities []*Entity `json:"entities"`
 }
 
-// ParseMessageReponse will translate the wit's ai json response into a Go MessageResponse struct.
+// ParseMessageResponse will translate the wit's ai json response into a Go MessageResponse struct.
 func ParseMessageResponse(data []byte) (*MessageResponse, error)  {
     // Container to hold all the json's data.
     var container interface{}
