@@ -1,5 +1,5 @@
 //Copyright (c) 2017 Denis <denis.nutiu@gmail.com>
-package src
+package main
 
 import (
     "net/http"
