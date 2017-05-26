@@ -15,7 +15,7 @@ type ConverseResponse struct {
 }
 
 // Will translate a json from wit.ai to a go struct
-func parseConverseResponse(data []byte) (*ConverseResponse, error) {
+func ParseConverseResponse(data []byte) (*ConverseResponse, error) {
     // Empty interface to hold all the Data
     var container interface{}
     response := new(ConverseResponse)
