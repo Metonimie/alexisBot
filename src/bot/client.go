@@ -8,7 +8,10 @@ import (
     "bytes"
     "io/ioutil"
     "net/url"
+    "log"
 )
+
+// TODO: Research timeout for the requests to wit.
 
 const apiUrl = "https://api.wit.ai"
 const apiVersion  = "20170307"
@@ -57,9 +60,38 @@ func (client *Client) makeUrl(path string, args queryValues) string {
     return buffer.String()
 }
 
+// Execute the request for the give url.
+// This functions sets the necessary headers and content-type and returns
+// back the response a bytes array.
+func (client *Client) executeRequest(url string) ([]byte, error)  {
+    // Create the request
+    request, err := http.NewRequest("POST", url, nil)
+    if err != nil {
+        return nil, err
+    }
+    // Set the headers.
+    request.Header.Add("Content-Type", "application/json")
+    request.Header.Add("Authorization", "Bearer " + client.apiKey)
+
+    // Execute the request
+    httpClient := http.Client{}
+    resp, err := httpClient.Do(request)
+    if err != nil {
+        return nil, err
+    }
+
+    // Read the response
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return nil, err
+    }
+
+    return body, nil
+}
+
 // Call the wit.ai /converse endpoint
 // See more: https://wit.ai/docs/http/20170307#post--converse-link
-func (client * Client) Converse(sessionId string, q string, reset bool) (string, error) {
+func (client * Client) Converse(sessionId string, q string, reset bool) ([]byte, error) {
     // Make a query map
     query := make(queryValues)
     query["session_id"] = sessionId
@@ -67,7 +99,7 @@ func (client * Client) Converse(sessionId string, q string, reset bool) (string,
     // Properly encode the query before sending it.
     cleanQ, err := url.Parse(q)
     if err != nil {
-        return "", err
+        return nil, err
     }
     query["q"] = cleanQ.String()
 
@@ -78,28 +110,48 @@ func (client * Client) Converse(sessionId string, q string, reset bool) (string,
     // Get the url for the post request.
     theUrl := client.makeUrl("/converse", query)
 
-    // Create the request
-    request, err := http.NewRequest("POST", theUrl, nil)
+    // Execute request
+    response, err := client.executeRequest(theUrl)
     if err != nil {
-        return "", err
-    }
-    // Set the headers.
-    request.Header.Add("Content-Type", "application/json")
-    request.Header.Add("Authorization", "Bearer " + client.apiKey)
-
-    // Execute the request
-    httpClient := http.Client{}
-    resp, err := httpClient.Do(request)
-    if err != nil {
-        return "", err
+        log.Println(err.Error())
     }
 
-    // Read the response
-    body, err := ioutil.ReadAll(resp.Body)
+    return response, nil
+}
+
+// Call the wit.ai /message endpoint
+// Only q is required, others are optional
+// See more: https://wit.ai/docs/http/20170307#get--message-link
+func (client * Client) Message(q string, msg_id *string, thread_id *string, n *string) ([]byte, error) {
+    // Make a query map
+    query := make(queryValues)
+
+    // Properly encode the query before sending it.
+    cleanQ, err := url.Parse(q)
     if err != nil {
-        return "", err
+        return nil, err
+    }
+    query["q"] = cleanQ.String()
+
+    if msg_id != nil {
+        query["msg_id"] = *msg_id
+    }
+    if thread_id != nil {
+        query["thread_id"] = *thread_id
+    }
+    if n != nil {
+        query["n"] = *n
     }
 
-    return string(body), nil
+    // Get the url for the post request.
+    theUrl := client.makeUrl("/message", query)
+
+    // Execute request
+    response, err := client.executeRequest(theUrl)
+    if err != nil {
+        log.Println(err.Error())
+    }
+
+    return response, nil
 }
 
