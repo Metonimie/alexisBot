@@ -16,7 +16,7 @@ type ConverseResponse struct {
 
 // Entity struct will hold infromation about wit.ai's entities
 type Entity struct {
-    Name string
+    Name string // Name will be used to determine what the next action will be.
     Value string `json:"value"`
     Type string `json:"type"`
     Suggested bool `json:"suggested"`
@@ -29,6 +29,7 @@ type MessageResponse struct {
     Entities []*Entity `json:"entities"`
 }
 
+// ParseMessageReponse will translate the wit's ai json response into a Go MessageResponse struct.
 func ParseMessageResponse(data []byte) (*MessageResponse, error)  {
     // Container to hold all the json's data.
     var container interface{}
@@ -56,7 +57,6 @@ func ParseMessageResponse(data []byte) (*MessageResponse, error)  {
             // Construct a new map of entities values
             entityValues := v.([]interface{})[0].(map[string]interface{})
             for ke, ve := range entityValues {
-                //fmt.Println(ke, ve)
                 if ke == "type" {
                     entity.Type = ve.(string)
                 } else if ke == "value" {
