@@ -14,6 +14,66 @@ type ConverseResponse struct {
     Entities   []byte // Contains raw json for later processing
 }
 
+// Entity struct will hold infromation about wit.ai's entities
+type Entity struct {
+    Name string
+    Value string `json:"value"`
+    Type string `json:"type"`
+    Suggested bool `json:"suggested"`
+    Confidence float64 `json:"confidence"`
+}
+
+// MessageResponse struct will hold only important data from wit.ai needed by our logic.
+type MessageResponse struct {
+    Text string `json:"_text"`
+    Entities []*Entity `json:"entities"`
+}
+
+func ParseMessageResponse(data []byte) (*MessageResponse, error)  {
+    // Container to hold all the json's data.
+    var container interface{}
+    response := new(MessageResponse)
+
+    err := json.Unmarshal(data, &container)
+    if err != nil {
+        return nil, err
+    }
+
+    // Translate container to a map type.
+    m := container.(map[string]interface{})
+
+    if m["_text"] != nil {
+        response.Text = m["_text"].(string)
+    }
+    if m["entities"] != nil {
+        // Construct a new map of entities
+        entities := m["entities"].(map[string]interface{})
+        // For each entity object that is present in entities
+        for k, v := range entities {
+            entity := new(Entity)
+            entity.Name = k
+
+            // Construct a new map of entities values
+            entityValues := v.([]interface{})[0].(map[string]interface{})
+            for ke, ve := range entityValues {
+                //fmt.Println(ke, ve)
+                if ke == "type" {
+                    entity.Type = ve.(string)
+                } else if ke == "value" {
+                    entity.Value = ve.(string)
+                } else if ke == "suggested" {
+                    entity.Suggested = ve.(bool)
+                } else if ke == "confidence" {
+                    entity.Confidence = ve.(float64)
+                }
+            }
+            // Add the entity to the response's entities array.
+            response.Entities = append(response.Entities, entity)
+        }
+    }
+    return response, err
+}
+
 // Will translate a json from wit.ai to a go struct
 func ParseConverseResponse(data []byte) (*ConverseResponse, error) {
     // Empty interface to hold all the Data

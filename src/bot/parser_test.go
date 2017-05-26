@@ -2,6 +2,7 @@ package bot
 
 import (
     "testing"
+    "fmt"
 )
 
 var data string = `{
@@ -16,6 +17,32 @@ var data string = `{
   }
 }`
 
+var messageData string = `{
+  "msg_id" : "a833cf6f-83c7-4702-9db1-40c6c30a0b87",
+  "_text" : "Hello",
+  "entities" : {
+    "reminder" : [ {
+      "confidence" : 0.7916673811727122,
+      "entities" : {
+        "contact" : [ {
+          "confidence" : 0.5748402256063738,
+          "type" : "value",
+          "value" : "Hello",
+          "suggested" : true
+        } ]
+      },
+      "type" : "value",
+      "value" : "Hello",
+      "suggested" : true
+    } ],
+    "greetings" : [ {
+      "confidence" : 1.0,
+      "value" : "true"
+    } ]
+  }
+}
+`
+
 func TestParseConverseResponse(t *testing.T) {
     pdata, err := ParseConverseResponse([]byte(data))
 
@@ -28,4 +55,26 @@ func TestParseConverseResponse(t *testing.T) {
     if pdata.Type != "msg" {
         t.Fail()
     }
+}
+
+func TestParseMessageResponse(t *testing.T) {
+    response, err := ParseMessageResponse([]byte(messageData))
+
+    if err != nil {
+        t.Fail()
+    }
+
+    if response.Text != "Hello" {
+        t.Fail()
+    }
+}
+
+func ExampleParseMessageResponse() {
+    response, _ := ParseMessageResponse([]byte(messageData))
+
+    fmt.Println(*response.Entities[0])
+    fmt.Println(*response.Entities[1])
+    // Output:
+    // {reminder Hello value true 0.7916673811727122}
+    // {greetings true  false 1}
 }
