@@ -6,19 +6,19 @@ import (
     "encoding/json"
 )
 
-// Response struct with coded values from the wit.ai api
-type Response struct {
-    responseType string // merge, action, msg, stop
-    data string // Will be filled up based on the responseType
-    confidence float64
-    entities []byte // Contains raw json for later processing
+// ConverseResponse struct with coded values from the wit.ai api
+type ConverseResponse struct {
+    Type       string // merge, action, msg, stop
+    Data       string // Will be filled up based on the Type
+    Confidence float64
+    Entities   []byte // Contains raw json for later processing
 }
 
 // Will translate a json from wit.ai to a go struct
-func parseResponse(data []byte) (*Response, error) {
-    // Empty interface to hold all the data
+func parseConverseResponse(data []byte) (*ConverseResponse, error) {
+    // Empty interface to hold all the Data
     var container interface{}
-    response := new(Response)
+    response := new(ConverseResponse)
 
     err := json.Unmarshal(data, &container)
     if err != nil {
@@ -28,23 +28,23 @@ func parseResponse(data []byte) (*Response, error) {
     // Construct a map from the empty interface
     m := container.(map[string]interface{})
 
-    if m["confidence"] != nil {
-        response.confidence = m["confidence"].(float64) // type assetion convert
+    if m["Confidence"] != nil {
+        response.Confidence = m["Confidence"].(float64) // type assetion convert
     }
     if m["type"] != nil {
-        response.responseType = m["type"].(string)
+        response.Type = m["type"].(string)
     }
     if m["msg"] != nil {
-        response.data = m["msg"].(string)
+        response.Data = m["msg"].(string)
     }
     if m["action"] != nil {
-        response.data = m["action"].(string)
+        response.Data = m["action"].(string)
     }
-    if m["entities"] != nil {
-        b, e := json.Marshal(m["entities"])
+    if m["Entities"] != nil {
+        b, e := json.Marshal(m["Entities"])
         // If we manage to construct the json successfully
         if e == nil {
-            response.entities = b
+            response.Entities = b
         }
     }
 
