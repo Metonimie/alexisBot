@@ -44,6 +44,7 @@ var messageData string = `{
 `
 
 func TestParseConverseResponse(t *testing.T) {
+    t.Parallel()
     pdata, err := ParseConverseResponse([]byte(data))
 
     if err != nil {
@@ -58,6 +59,7 @@ func TestParseConverseResponse(t *testing.T) {
 }
 
 func TestParseMessageResponse(t *testing.T) {
+    t.Parallel()
     response, err := ParseMessageResponse([]byte(messageData))
 
     if err != nil {
@@ -77,4 +79,18 @@ func ExampleParseMessageResponse() {
     // Output:
     // {reminder Hello value true 0.7916673811727122}
     // {greetings true  false 1}
+}
+
+func TestMessageResponse_ContainsEntity(t *testing.T) {
+    t.Parallel()
+
+    messageResponse := MessageResponse{}
+    messageResponse.Entities = append(messageResponse.Entities, &Entity{Name: "calme"})
+
+    if messageResponse.ContainsEntity("calme") != true {
+        t.Fail()
+    }
+    if messageResponse.ContainsEntity("calmee") != false {
+        t.Fail()
+    }
 }

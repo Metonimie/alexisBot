@@ -29,6 +29,16 @@ type MessageResponse struct {
     Entities []*Entity `json:"entities"`
 }
 
+// Check if the message response contains an entity with name x
+func (ms *MessageResponse) ContainsEntity(name string) bool {
+    for _, entity := range ms.Entities {
+        if entity.Name == name {
+            return true
+        }
+    }
+    return false
+}
+
 // ParseMessageResponse will translate the wit's ai json response into a Go MessageResponse struct.
 func ParseMessageResponse(data []byte) (*MessageResponse, error)  {
     // Container to hold all the json's data.
