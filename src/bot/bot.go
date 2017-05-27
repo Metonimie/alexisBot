@@ -82,7 +82,7 @@ func HandleMessage(m *messenger.Message, r *messenger.Response, p *messenger.Pro
 func respondToMessage(response *Response) {
     // Check if wit.ai understood the message.
     if invalidEntities(response.witResponse) {
-        response.response.Text("Sorry. I didn't understand. :(")
+        response.response.Text("My algorithms are having a hard time trying to understand u. :(")
         response.response.Text("Try typing: help.")
         return
     }
@@ -98,8 +98,7 @@ func respondToMessage(response *Response) {
     } else if response.witResponse.ContainsEntity("bye") {
         response.response.Text(getRandomString(goodbyeMessages[:]) + response.profile.FirstName + " :)")
     } else {
-        response.response.Text("I understood what you've said, but...")
-        response.response.Text("I'm currently not able to provide you with the info.")
-        response.response.Text("Try again later and stay tuned! :)")
+        response.response.Text("Sorry. I didn't understand. :(")
+        response.response.Text("Try typing: help.")
     }
 }
