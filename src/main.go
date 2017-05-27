@@ -9,7 +9,6 @@ import (
     "github.com/paked/messenger"
     "fmt"
     "time"
-    "strings"
     "os"
     "bot"
 )
