@@ -115,5 +115,8 @@ func respondToMessage(response *Response) {
 
     } else {
         response.response.Text("Sorry. I didn't understand. :(")
+        for _, v := range response.witResponse.Entities {
+            response.response.Text(v.Name)
+        }
     }
 }
