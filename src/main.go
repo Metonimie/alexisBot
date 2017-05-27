@@ -11,6 +11,7 @@ import (
     "time"
     "strings"
     "os"
+    "bot"
 )
 
 const host = "denisnutiu.me"
@@ -28,24 +29,19 @@ func MessageHandler(m messenger.Message, r *messenger.Response) {
     log.Printf("%v (Sent, %v)\n", m.Text, m.Time.Format(time.UnixDate))
 
     // p is delcared here.
-    _, err := client.ProfileByID(m.Sender.ID)
+    p, err := client.ProfileByID(m.Sender.ID)
     if err != nil {
         log.Println("Something went wrong!", err)
     }
 
-    // Spongebob's algorithm
-    var newS string
-    counter := 0
-    for _, c := range m.Text {
-         if counter % 2 != 0 {
-              newS += strings.ToLower(string(c))
-         } else {
-              newS += strings.ToUpper(string(c))
-         }
-         counter++
-    }
+    err = bot.HandleMessage(&m, r, &p)
 
-    r.Text(newS)
+    if err != nil {
+        r.Text("Aaaahhhahahhh! I'm experiecingg.....")
+        r.Text("A bufferrr, oveerrfllowooooow.")
+        r.Text("Jk, I'm written in Go.")
+        r.Text("www.golang.com :>")
+    }
 }
 
 // Handler to be triggered when a message is delivered
