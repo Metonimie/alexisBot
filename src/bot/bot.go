@@ -97,8 +97,23 @@ func respondToMessage(response *Response) {
         response.response.Text(getRandomString(greetingMessages[:]) + response.profile.FirstName + "!")
     } else if response.witResponse.ContainsEntity("bye") {
         response.response.Text(getRandomString(goodbyeMessages[:]) + response.profile.FirstName + " :)")
+    } else if response.witResponse.ContainsEntity("datetime") {
+
+        response.response.Text("You some schedule. Idk how to do that. :)" )
+
+    } else if response.witResponse.ContainsEntity("next-item") {
+        // Code for the next items is going here.
+        if response.witResponse.ContainsEntity("course") {
+            response.response.Text("You want the next course. No can do :)")
+        }
+        if response.witResponse.ContainsEntity("project") {
+            response.response.Text("You want the next project. No can do :)")
+        }
+        if response.witResponse.ContainsEntity("laboratory") {
+            response.response.Text("You want the next laboratory. No can do :)")
+        }
+
     } else {
         response.response.Text("Sorry. I didn't understand. :(")
-        response.response.Text("Try typing: help.")
     }
 }
