@@ -7,8 +7,6 @@ import (
     "golang.org/x/crypto/acme/autocert"
     "crypto/tls"
     "github.com/paked/messenger"
-    "fmt"
-    "time"
     "os"
     "bot"
 )
@@ -25,9 +23,7 @@ var client *messenger.Messenger
 
 // Handler to be triggered when a message is received
 func MessageHandler(m messenger.Message, r *messenger.Response) {
-    log.Printf("%v (Sent, %v)\n", m.Text, m.Time.Format(time.UnixDate))
-
-    // p is delcared here.
+    // Get the Profile
     p, err := client.ProfileByID(m.Sender.ID)
     if err != nil {
         log.Println("Something went wrong!", err)
@@ -36,21 +32,13 @@ func MessageHandler(m messenger.Message, r *messenger.Response) {
     err = bot.HandleMessage(&m, r, &p)
 
     if err != nil {
-        r.Text("Aaaahhhahahhh! I'm experiecingg.....")
-        r.Text("A bufferrr, oveerrfllowooooow.")
+        log.Println("Error by " + p.FirstName + p.LastName)
+        log.Println(err.Error())
+        r.Text("Hold on a minute!")
+        r.Text("I'm experiencing something called a buffer overflow.")
         r.Text("Jk, I'm written in Go.")
         r.Text("www.golang.com :>")
     }
-}
-
-// Handler to be triggered when a message is delivered
-func DeliveryHandler(d messenger.Delivery, r *messenger.Response) {
-    fmt.Println("Delivered at:", d.Watermark().Format(time.UnixDate))
-}
-
-// Handler to be triggered when a message is read
-func ReadHandler(m messenger.Read, r *messenger.Response) {
-    fmt.Println("Read at:", m.Watermark().Format(time.UnixDate))
 }
 
 func main() {
@@ -80,10 +68,6 @@ func main() {
 
     // Setup a handler to be triggered when a message is received
     client.HandleMessage(MessageHandler)
-    // Setup a handler to be triggered when a message is read
-    client.HandleRead(ReadHandler)
-    // Setup a handler to be triggered when a message is delivered
-    client.HandleDelivery(DeliveryHandler)
 
     log.Println("Hello world, I think, therefore I am.")
     // Start the server and log.
