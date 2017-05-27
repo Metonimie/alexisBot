@@ -21,7 +21,7 @@ var pageToken string = os.Getenv("FB_PAGE_TOKEN") // The facebook page token.
 
 var client *messenger.Messenger
 
-// Handler to be triggered when a message is received
+// MessageHandler is triggered when a message is received
 func MessageHandler(m messenger.Message, r *messenger.Response) {
     // Get the Profile
     p, err := client.ProfileByID(m.Sender.ID)
