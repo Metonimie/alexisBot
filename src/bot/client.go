@@ -128,11 +128,8 @@ func (client * Client) Message(q string, msg_id *string, thread_id *string, n *s
     query := make(queryValues)
 
     // Properly encode the query before sending it.
-    cleanQ, err := url.Parse(q)
-    if err != nil {
-        return nil, err
-    }
-    query["q"] = cleanQ.String()
+    cleanQ := url.QueryEscape(q)
+    query["q"] = cleanQ
 
     if msg_id != nil {
         query["msg_id"] = *msg_id
