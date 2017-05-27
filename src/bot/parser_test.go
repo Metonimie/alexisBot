@@ -74,11 +74,11 @@ func TestParseMessageResponse(t *testing.T) {
 func ExampleParseMessageResponse() {
     response, _ := ParseMessageResponse([]byte(messageData))
 
-    fmt.Println(*response.Entities[0])
-    fmt.Println(*response.Entities[1])
+    fmt.Println(response.Entities[0].Name)
+    fmt.Println(response.Entities[1].Name)
     // Output:
-    // {reminder Hello value true 0.7916673811727122}
-    // {greetings true  false 1}
+    // reminder
+    // greetings
 }
 
 func TestMessageResponse_ContainsEntity(t *testing.T) {
