@@ -3,9 +3,9 @@ package bot
 import (
     "os"
     "github.com/paked/messenger"
-    "log"
     "math/rand"
     "time"
+    "log"
 )
 
 var token = os.Getenv("WIT_API_TOKEN")
@@ -35,9 +35,6 @@ func initClient()  {
 
 // Get a random string from a slice
 func getRandomString(slice []string) string {
-    if slice == nil {
-        return  nil
-    }
     return slice[rand.Intn(len(slice))]
 }
 
@@ -59,6 +56,7 @@ func HandleMessage(m *messenger.Message, r *messenger.Response, p *messenger.Pro
     // Send text to wit.ai
     response, err := witAiClient.Message(m.Text, nil, nil, nil)
     if err != nil {
+        log.Println(err)
         return err
     }
 
