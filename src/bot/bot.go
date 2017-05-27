@@ -11,10 +11,10 @@ import (
 var token = os.Getenv("WIT_API_TOKEN")
 
 // Messages arrays
-var greetingMessages []string = []string{"Hello there ", "Hey, ", "Hi "}
-var goodbyeMessages []string = []string{"Goodbye ", "Bye ", "See you later "}
+var greetingMessages = []string{"Hello there ", "Hey, ", "Hi "}
+var goodbyeMessages = []string{"Goodbye ", "Bye ", "See you later "}
 
-// Holds all variables needed to respond to avoid long argument lists.
+// Response holds all variables needed to respond to avoid long argument lists.
 type Response struct {
     profile *messenger.Profile
     message *messenger.Message
@@ -46,7 +46,7 @@ func invalidEntities(r *MessageResponse) bool {
     return false
 }
 
-// Handle client requests by sending them to Wit.ai and process the request.
+// HandleMessage handles client requests by sending them to Wit.ai and process the request.
 func HandleMessage(m *messenger.Message, r *messenger.Response, p *messenger.Profile) error {
     // Reuse the client.
     if witAiClient == nil {
