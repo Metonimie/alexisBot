@@ -101,7 +101,7 @@ func respondToMessage(response *Response) {
 
         response.response.Text("You some schedule. Idk how to do that. :)" )
 
-    } else if response.witResponse.ContainsEntity("next-item") {
+    } else if response.witResponse.ContainsEntity("next_item") {
         // Code for the next items is going here.
         if response.witResponse.ContainsEntity("course") {
             response.response.Text("You want the next course. No can do :)")
