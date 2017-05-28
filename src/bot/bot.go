@@ -1,3 +1,5 @@
+// Package bot
+// Copyright 2017 Denis Nutiu
 package bot
 
 import (

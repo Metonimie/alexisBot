@@ -1,3 +1,4 @@
+// Package bot
 // Copyright 2017 Denis Nutiu
 // This file contains logic for parsing json received from wit.ai
 package bot
@@ -29,7 +30,7 @@ type MessageResponse struct {
 	Entities []*Entity `json:"entities"`
 }
 
-// Check if the message response contains an entity with name x
+// ContainsEntity checks if the message response contains an entity with name x
 func (ms *MessageResponse) ContainsEntity(name string) bool {
 	for _, entity := range ms.Entities {
 		if entity.Name == name {
@@ -84,7 +85,7 @@ func ParseMessageResponse(data []byte) (*MessageResponse, error) {
 	return response, err
 }
 
-// Will translate a json from wit.ai to a go struct
+// ParseConverseResponse will translate a JSON from wit.ai to a Go struct
 func ParseConverseResponse(data []byte) (*ConverseResponse, error) {
 	// Empty interface to hold all the Data
 	var container interface{}

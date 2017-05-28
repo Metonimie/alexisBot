@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var data string = `{
+var data = `{
   "Confidence" : 0.08051390588273054,
   "type" : "msg",
   "msg" : "Hello there",
@@ -17,7 +17,7 @@ var data string = `{
   }
 }`
 
-var messageData string = `{
+var messageData = `{
   "msg_id" : "a833cf6f-83c7-4702-9db1-40c6c30a0b87",
   "_text" : "Hello",
   "entities" : {
