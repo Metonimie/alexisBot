@@ -1,4 +1,4 @@
-// Package bot
+// Package bot ...
 // Copyright 2017 Denis Nutiu
 // This file contains logic for parsing json received from wit.ai
 package bot

@@ -1,4 +1,4 @@
-// Package bot
+// Package bot ...
 // Copyright 2017 Denis Nutiu
 package bot
 

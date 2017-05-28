@@ -1,4 +1,4 @@
-// Package bot
+// Package bot ...
 // Copyright 2017 Denis Nutiu
 // The client file contains the logic to communicate with the Wit.ai API
 //
@@ -19,7 +19,7 @@ const apiVersion = "20170307"
 
 // Client struct that holds all the necessary data for a successful communication with Wit.ai
 type Client struct {
-	apiUrl     string
+	apiURL     string
 	apiKey     string
 	apiVersion string
 	userAgent  string
@@ -27,13 +27,13 @@ type Client struct {
 
 type queryValues map[string]string
 
-// Create a new Wit Client.
+// NewWitClient creates a new Wit Client.
 //
 //    client := bot.Client("WIT TOKEN")
 func NewWitClient(witToken string) *Client {
 	client := new(Client)
 	client.apiKey = witToken
-	client.apiUrl = apiURL
+	client.apiURL = apiURL
 	client.apiVersion = apiVersion
 	client.userAgent = "AlexisBot"
 	return client
@@ -48,7 +48,7 @@ func NewWitClient(witToken string) *Client {
 //    theUrl will have the following value: https://api.wit.ai/converse?v=123&session_id=abc123
 func (client *Client) makeURL(path string, args queryValues) string {
 	var buffer bytes.Buffer
-	buffer.WriteString(client.apiUrl)
+	buffer.WriteString(client.apiURL)
 	buffer.WriteString(path)
 	buffer.WriteString("?v=")
 	buffer.WriteString(client.apiVersion)
@@ -94,10 +94,10 @@ func (client *Client) executeRequest(url string) ([]byte, error) {
 
 // Converse calls the wit.ai /converse endpoint
 // See more: https://wit.ai/docs/http/20170307#post--converse-link
-func (client *Client) Converse(sessionId string, q string, reset bool) ([]byte, error) {
+func (client *Client) Converse(sessionID string, q string, reset bool) ([]byte, error) {
 	// Make a query map
 	query := make(queryValues)
-	query["session_id"] = sessionId
+	query["session_id"] = sessionID
 
 	// Properly encode the query before sending it.
 	cleanQ, err := url.Parse(q)
@@ -111,10 +111,10 @@ func (client *Client) Converse(sessionId string, q string, reset bool) ([]byte, 
 		query["reset"] = "true"
 	}
 	// Get the url for the post request.
-	theUrl := client.makeURL("/converse", query)
+	theURL := client.makeURL("/converse", query)
 
 	// Execute request
-	response, err := client.executeRequest(theUrl)
+	response, err := client.executeRequest(theURL)
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -125,7 +125,7 @@ func (client *Client) Converse(sessionId string, q string, reset bool) ([]byte, 
 // Message calls the wit.ai /message endpoint
 // Only q is required, others are optional
 // See more: https://wit.ai/docs/http/20170307#get--message-link
-func (client *Client) Message(q string, msg_id *string, thread_id *string, n *string) ([]byte, error) {
+func (client *Client) Message(q string, msgID *string, threadID *string, n *string) ([]byte, error) {
 	// Make a query map
 	query := make(queryValues)
 
@@ -133,21 +133,21 @@ func (client *Client) Message(q string, msg_id *string, thread_id *string, n *st
 	cleanQ := url.QueryEscape(q)
 	query["q"] = cleanQ
 
-	if msg_id != nil {
-		query["msg_id"] = *msg_id
+	if msgID != nil {
+		query["msgID"] = *msgID
 	}
-	if thread_id != nil {
-		query["thread_id"] = *thread_id
+	if threadID != nil {
+		query["threadID"] = *threadID
 	}
 	if n != nil {
 		query["n"] = *n
 	}
 
 	// Get the url for the post request.
-	theUrl := client.makeURL("/message", query)
+	theURL := client.makeURL("/message", query)
 
 	// Execute request
-	response, err := client.executeRequest(theUrl)
+	response, err := client.executeRequest(theURL)
 	if err != nil {
 		log.Println(err.Error())
 	}
