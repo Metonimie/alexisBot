@@ -78,10 +78,10 @@ func (client *Client) executeRequest(url string) ([]byte, error) {
 	// Execute the request
 	httpClient := http.Client{}
 	resp, err := httpClient.Do(request)
-	defer resp.Body.Close() // Close when this function returns.
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close() // Close when this function returns.
 
 	// Read the response
 	body, err := ioutil.ReadAll(resp.Body)
