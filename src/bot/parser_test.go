@@ -1,8 +1,8 @@
 package bot
 
 import (
-    "testing"
-    "fmt"
+	"fmt"
+	"testing"
 )
 
 var data string = `{
@@ -44,53 +44,53 @@ var messageData string = `{
 `
 
 func TestParseConverseResponse(t *testing.T) {
-    t.Parallel()
-    pdata, err := ParseConverseResponse([]byte(data))
+	t.Parallel()
+	pdata, err := ParseConverseResponse([]byte(data))
 
-    if err != nil {
-        t.Fail()
-    }
-    if pdata.Data != "Hello there" {
-        t.Fail()
-    }
-    if pdata.Type != "msg" {
-        t.Fail()
-    }
+	if err != nil {
+		t.Fail()
+	}
+	if pdata.Data != "Hello there" {
+		t.Fail()
+	}
+	if pdata.Type != "msg" {
+		t.Fail()
+	}
 }
 
 func TestParseMessageResponse(t *testing.T) {
-    t.Parallel()
-    response, err := ParseMessageResponse([]byte(messageData))
+	t.Parallel()
+	response, err := ParseMessageResponse([]byte(messageData))
 
-    if err != nil {
-        t.Fail()
-    }
+	if err != nil {
+		t.Fail()
+	}
 
-    if response.Text != "Hello" {
-        t.Fail()
-    }
+	if response.Text != "Hello" {
+		t.Fail()
+	}
 }
 
 func ExampleParseMessageResponse() {
-    response, _ := ParseMessageResponse([]byte(messageData))
+	response, _ := ParseMessageResponse([]byte(messageData))
 
-    fmt.Println(response.Entities[0].Name)
-    fmt.Println(response.Entities[1].Name)
-    // Output:
-    // reminder
-    // greetings
+	fmt.Println(response.Entities[0].Name)
+	fmt.Println(response.Entities[1].Name)
+	// Output:
+	// reminder
+	// greetings
 }
 
 func TestMessageResponse_ContainsEntity(t *testing.T) {
-    t.Parallel()
+	t.Parallel()
 
-    messageResponse := MessageResponse{}
-    messageResponse.Entities = append(messageResponse.Entities, &Entity{Name: "calme"})
+	messageResponse := MessageResponse{}
+	messageResponse.Entities = append(messageResponse.Entities, &Entity{Name: "calme"})
 
-    if messageResponse.ContainsEntity("calme") != true {
-        t.Fail()
-    }
-    if messageResponse.ContainsEntity("calmee") != false {
-        t.Fail()
-    }
+	if messageResponse.ContainsEntity("calme") != true {
+		t.Fail()
+	}
+	if messageResponse.ContainsEntity("calmee") != false {
+		t.Fail()
+	}
 }
